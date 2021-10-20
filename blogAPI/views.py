@@ -1,63 +1,64 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import BlogSerializer
-from .models import Blog
-from rest_framework import permissions
+from .serializers import PostSerializer
+from .models import Post
+# from rest_framework import permissions
 
 
-# path('blog-list/', views.BlogList.as_view(), name='blog-list'),
-# path('blog-create/', views.BlogCreate.as_view(), name='blog-create'),
-# path('blog-update/<str:pk>/', views.BlogUpdate.as_view(), name='blog-update'),
-# path('blog-delete/<str:pk>/', views.BlogDelete.as_view(), name='blog-delete'),
+# path('post-list/', views.PostList.as_view(), name='post-list'),
+# path('post-create/', views.PostCreate.as_view(), name='post-create'),
+# path('post-update/<str:pk>/', views.PostUpdate.as_view(), name='post-update'),
+# path('post-delete/<str:pk>/', views.PostDelete.as_view(), name='post-delete'),
 
 # The APIs required (using JWT)
 # Login
 # Logout
 # Refresh Token
 
-# Show all blogs
-class BlogList(APIView):
-    permission_classes = (permissions.IsAuthenticated,)
+# Show all posts
+class PostList(APIView):
+    # permission_classes = (permissions.IsAuthenticated,)
     def get(self, request):
-        blogs = Blog.objects.all()
-        serializer = BlogSerializer(blogs, many=True)
+        # posts = Post.objects.filter(user=request.user)
+        posts = Post.objects.all()
+        serializer = PostSerializer(posts, many=True)
 
         return Response(serializer.data)
 
 
 # Create (require JWT token)
-class BlogCreate(APIView):
-    permission_classes = (permissions.IsAuthenticated,)
+class PostCreate(APIView):
+    # permission_classes = (permissions.IsAuthenticated,)
     def post(self, request):
-        serializer = BlogSerializer(data=request.data)
+        serializer = PostSerializer(data=request.data)
 
         if serializer.is_valid():
+            # serializer.save(user=request.user)
             serializer.save()
 
-            return Response('ok')
+            return Response('ok', status=201)
 
         else:
-            return Response('Error with creating')
-
+            return Response('Error with creating', status=400)
 
 # Update (require JWT token)
-class BlogUpdate(APIView):
-    permission_classes = (permissions.IsAuthenticated,)
+class PostUpdate(APIView):
+    # permission_classes = (permissions.IsAuthenticated,)
     def post(self, request, pk):
-        blog = Blog.objects.get(id=pk)
-        serializer = BlogSerializer(instance=blog, data=request.data)
+        post = Post.objects.get(id=pk)
+        serializer = PostSerializer(instance=post, data=request.data)
 
         if serializer.is_valid():
+            # serializer.save(user=request.user)
             serializer.save()
-
         return Response('updated')
 
 
 # Delete (require JWT token)
-class BlogDelete(APIView):
-    permission_classes = (permissions.IsAuthenticated,)
+class PostDelete(APIView):
+    # permission_classes = (permissions.IsAuthenticated,)
     def delete(self, request, pk):
-        blog = Blog.objects.get(id=pk)
-        blog.delete()
+        post = Post.objects.get(id=pk)
+        post.delete()
 
         return Response('item deleted')

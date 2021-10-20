@@ -1,9 +1,10 @@
 # from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Blog
+from .models import Post
 
-class BlogSerializer(serializers.ModelSerializer):
+class PostSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Blog
+        model = Post
         fields = '__all__'
 
+    # author = serializers.ReadOnlyField(source='user.username')
