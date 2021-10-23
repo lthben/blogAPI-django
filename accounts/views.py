@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from .serializers import UserSerializer, TokenSerializer
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
+from rest_framework.views import APIView
 
 # JWT settings
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -35,7 +36,7 @@ class LoginView(generics.ListCreateAPIView):
             refresh = RefreshToken.for_user(user)
             serializer = TokenSerializer(data={
                 # using DRF JWT utility functions to generate a token
-                "token": str(refresh.access_token)
+                "token": str(refresh.access_token),
                 })
             serializer.is_valid()
             return Response(serializer.data)
@@ -52,14 +53,28 @@ class RegisterUsersView(generics.ListCreateAPIView):
         username = request.data.get("username", "")
         password = request.data.get("password", "")
         email = request.data.get("email", "")
-        if not username or not password or not email:
+        first_name = request.data.get("first_name", "")
+        last_name = request.data.get("last_name", "")
+        if not username or not password or not email or not first_name or not last_name:
             return Response(
                 data={
-                    "message": "username, password and email is required to register a user"
+                    "message": "all fields are required to register a user"
                 },
                 status=status.HTTP_400_BAD_REQUEST
             )
         new_user = User.objects.create_user(
-            username=username, password=password, email=email
+            username=username, password=password, email=email, first_name=first_name, last_name=last_name
         )
         return Response(status=status.HTTP_201_CREATED)
+
+class FirstNameView(APIView):
+    """
+    POST user/firstname/
+    """
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request):
+
+        user = User.objects.get(username=request.data["username"])
+        serializer = UserSerializer(instance=user)
+        return Response(serializer.data["first_name"])
