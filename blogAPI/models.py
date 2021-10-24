@@ -7,14 +7,11 @@ from django.urls import reverse
 # Create your models here.
 
 class Post(models.Model):
-    # id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    # someid = models.UUIDField(default=uuid.uuid4, unique=True)
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     title = models.CharField(max_length=255)
     slug = models.SlugField(unique=True, max_length=255)
     content = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
-    # author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="blogs")
     author = models.TextField()
 
     def __str__(self):
@@ -40,7 +37,8 @@ class Comment(models.Model):
     # email = models.EmailField(max_length=75)
     # website = models.URLField(max_length=200, null=True, blank=True)
     content = models.TextField()
-    post = models.ForeignKey(Post, on_delete=models.SET_NULL, null=True, blank=True)
+    # post = models.ForeignKey(Post, on_delete=models.DO_NOTHING, default=None)
+    post_id = models.UUIDField()
     author = models.CharField(max_length=40)
     created_on = models.DateTimeField(auto_now_add=True)
 

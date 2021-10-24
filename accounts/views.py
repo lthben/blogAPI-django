@@ -78,3 +78,4 @@ class FirstNameView(APIView):
         user = User.objects.get(username=request.data["username"])
         serializer = UserSerializer(instance=user)
         return Response(serializer.data["first_name"])
+

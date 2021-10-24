@@ -60,7 +60,7 @@ class PostDelete(APIView):
 class CommentList(APIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     def get(self, request, pk):
-        comments = Comment.objects.all(post=pk)
+        comments = Comment.objects.filter(post_id=pk)
         serializer = CommentSerializer(comments, many=True)
 
         return Response(serializer.data)
@@ -72,6 +72,9 @@ class CommentCreate(APIView):
         serializer = CommentSerializer(data=request.data)
 
         if serializer.is_valid():
+            # post = Post.objects.get(id=pk)
+            # serializer.validated_data['post_id'] = post.id
+            # print(serializer.validated_data)
             serializer.save()
 
             return Response('ok', status=201)
@@ -87,8 +90,8 @@ class CommentUpdate(APIView):
         serializer = PostSerializer(instance=comment, data=request.data)
 
         if serializer.is_valid():
-            serializer.save(user=request.user)
-            # serializer.save() #no auth
+            # serializer.save(user=request.user)
+            serializer.save() #no auth
         return Response('comment updated')
 
 # Delete (require JWT token)
