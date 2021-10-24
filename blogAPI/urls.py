@@ -6,8 +6,8 @@ urlpatterns = [
     path('post-create/', views.PostCreate.as_view(), name='post-create'),
     path('post-update/<str:pk>/', views.PostUpdate.as_view(), name='post-update'),
     path('post-delete/<str:pk>/', views.PostDelete.as_view(), name='post-delete'),
-    # path('$/', views.posts, name='posts'),
-    # path('$/', views.comments, name='comments'),
-    # path('', views.index, name='index'),
-    # path('post/', views.individual_post, name='individual_post')
+    path('comment-list/<str:pk>/', views.CommentList.as_view(), name='comments-list'),
+    path('comment-create/', views.CommentCreate.as_view(), name='comment-create'),
+    path('comment-update/<str:pk>/', views.CommentUpdate.as_view(), name='comment-update'),
+    path('comment-delete/<str:pk>/', views.CommentDelete.as_view(), name='comment-delete'),
 ]
