@@ -40,6 +40,8 @@ class LoginView(generics.ListCreateAPIView):
                 })
             serializer.is_valid()
             return Response(serializer.data)
+        else:
+            return Response('Error logging in', status=400)
 
 class RegisterUsersView(generics.ListCreateAPIView):
     """

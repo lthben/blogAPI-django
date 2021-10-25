@@ -86,13 +86,16 @@ class CommentCreate(APIView):
 class CommentUpdate(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     def post(self, request, pk):
-        comment = Comments.objects.get(id=pk)
-        serializer = PostSerializer(instance=comment, data=request.data)
+        comment = Comment.objects.get(id=pk)
+        serializer = CommentSerializer(instance=comment, data=request.data)
 
         if serializer.is_valid():
             # serializer.save(user=request.user)
             serializer.save() #no auth
-        return Response('comment updated')
+
+            return Response('comment updated', status=200)
+        else:
+            return Response('error updating comment', status=400)
 
 # Delete (require JWT token)
 class CommentDelete(APIView):
