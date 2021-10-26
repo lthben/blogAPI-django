@@ -53,6 +53,8 @@ class PostDelete(APIView):
     def delete(self, request, pk):
         post = Post.objects.get(id=pk)
         post.delete()
+        comments = Comment.objects.filter(post_id=pk)
+        comments.delete()
 
         return Response('post deleted')
 
