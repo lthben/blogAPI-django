@@ -26,7 +26,7 @@ class Post(models.Model):
     #     super(Post, self).save(*args, **kwargs)
 
     class Meta:
-        ordering = ['created_on']
+        ordering = ['-created_on']
 
         def __unicode__(self):
             return self.title
@@ -46,7 +46,7 @@ class Comment(models.Model):
        return self.author + '_comment'
 
     class Meta:
-        ordering = ['created_on']
+        ordering = ['-created_on']
 
         def __unicode__(self):
             return self.author + '_comment'

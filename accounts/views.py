@@ -69,9 +69,9 @@ class RegisterUsersView(generics.ListCreateAPIView):
         )
         return Response(status=status.HTTP_201_CREATED)
 
-class FirstNameView(APIView):
+class GetUserDataView(APIView):
     """
-    POST user/firstname/
+    POST user/get-user-data/
     """
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -79,5 +79,25 @@ class FirstNameView(APIView):
 
         user = User.objects.get(username=request.data["username"])
         serializer = UserSerializer(instance=user)
-        return Response(serializer.data["first_name"])
+        data = serializer.data["first_name"] + "," + serializer.data["last_name"] + "," + serializer.data["email"]
+        # return Response(serializer.data["first_name"])
+        return Response(data)
+        # return Response(serializer.data)
+
+class SetUserDataView(APIView):
+    """
+    POST user/set-user-data/<str:username>/
+    """
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request, username):
+
+        user = User.objects.get(username=username)
+        user.set_password(request.data["password"])
+        user.email = request.data["email"]
+        user.first_name = request.data["first_name"]
+        user.last_name = request.data["last_name"]
+        user.save()
+
+        return Response('ok', status=200)
 
